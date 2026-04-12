@@ -63,7 +63,7 @@ Single dev server, shared **design tokens** (CSS variables) and primitives, and 
 4. **Discovery** — genre/mood rails (mock categories).
 5. **New releases** — row of mocked albums/singles.
 
-Each section: title row with optional **“See all”** (stub navigation or disabled state until phase 1.1 scope expands).
+Each section: title row with optional **“See all”** (stub navigation or disabled state until a later scope iteration).
 
 ## 4. Components (conceptual)
 
