@@ -10,6 +10,462 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
+      --bg: #8ea8b3;
+      --card: #f8f8f8;
+      --line: #d6dbe0;
+      --text: #28343b;
+      --muted: #5b6a72;
+      --accent: #4f6c79;
+      --shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Jost", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      padding-bottom: 84px;
+    }
+    .container { width: min(100% - 1.3rem, 700px); margin: 0 auto; }
+    .section { padding: 1rem 0; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 1.1rem;
+      box-shadow: var(--shadow);
+    }
+    .center { text-align: center; }
+    .kicker {
+      margin: 0;
+      font-size: .74rem;
+      letter-spacing: .16em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .script {
+      margin: .35rem 0;
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(2.5rem, 10vw, 4rem);
+      font-weight: 400;
+      color: #1c252a;
+      line-height: 1.03;
+    }
+    .date-dot {
+      margin: .25rem 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.35rem;
+      letter-spacing: .18em;
+    }
+    .sub { margin: .22rem 0; color: var(--muted); }
+    .title {
+      margin: 0 0 .7rem;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.55rem;
+      color: #384a54;
+    }
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      padding: .62rem 1rem;
+      font: inherit;
+      color: #fff;
+      background: var(--accent);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform .2s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-row { display: flex; gap: .5rem; flex-wrap: wrap; justify-content: center; }
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: .45rem;
+      text-align: center;
+    }
+    .countdown .box {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: .6rem .2rem;
+      background: #fff;
+    }
+    .countdown .num { display: block; font-size: 1.3rem; font-weight: 600; }
+    .timeline { margin: 0; padding-left: 1rem; }
+    .timeline li { margin: .38rem 0; }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: .45rem;
+    }
+    .gallery img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      cursor: pointer;
+      background: #fff;
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Opening page */
+    .cover {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      background: var(--bg);
+      transition: opacity .6s ease, visibility .6s ease;
+    }
+    .cover.hidden { opacity: 0; visibility: hidden; }
+    .cover-card {
+      width: min(72vw, 300px);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 1.15rem .9rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+      animation: fadeInUp .7s ease both;
+    }
+    .cover-card.tap-pop { animation: tapPop .3s ease forwards; }
+    .tap-btn { margin-top: .8rem; min-width: 120px; letter-spacing: .07em; text-transform: uppercase; }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes tapPop {
+      0% { transform: scale(1); }
+      55% { transform: scale(.95); }
+      100% { transform: scale(1.02); }
+    }
+
+    .music-fab {
+      position: fixed;
+      right: .9rem;
+      bottom: 5.3rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      box-shadow: var(--shadow);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      z-index: 40;
+    }
+    .music-fab .ring {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #a1aeb5;
+    }
+    .music-fab.is-playing .ring { background: #3bb470; animation: pulse 1.7s ease infinite; }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(59, 180, 112, .45); }
+      70% { box-shadow: 0 0 0 8px rgba(59, 180, 112, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(59, 180, 112, 0); }
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      bottom: .6rem;
+      transform: translateX(-50%);
+      width: min(100% - 1rem, 540px);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .35rem;
+      padding: .35rem;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      z-index: 35;
+    }
+    .bottom-nav a, .bottom-nav button {
+      border: 0;
+      background: transparent;
+      color: #3f5561;
+      font: inherit;
+      border-radius: 999px;
+      text-decoration: none;
+      padding: .44rem .2rem;
+      text-align: center;
+      cursor: pointer;
+    }
+    .bottom-nav a:hover, .bottom-nav button:hover { background: #edf1f4; }
+    dialog { border: 0; border-radius: 10px; width: min(92vw, 420px); padding: .7rem; }
+    dialog img { width: 100%; border-radius: 8px; }
+    dialog::backdrop { background: rgba(12, 18, 22, .56); }
+    #ytPlayer { position: absolute; left: -9999px; width: 1px; height: 1px; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition-duration: 1ms !important; animation-duration: 1ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cover" id="cover">
+    <article class="cover-card" id="coverCard">
+      <h1 class="script">Amir &amp; Lidya</h1>
+      <button class="btn tap-btn" id="openInvite">Tap</button>
+    </article>
+  </div>
+
+  <main>
+    <section id="hero" class="section reveal">
+      <div class="container">
+        <article class="card center">
+          <p class="kicker">Walimatul Urus</p>
+          <h1 class="script">Amir &amp; Lidya</h1>
+          <p class="date-dot">29 . 08 . 2026</p>
+          <p class="sub">11:00 Pagi - 4:00 Petang</p>
+          <p class="sub">Dewan Serbaguna Bedong, Kedah</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="countdown" class="section reveal">
+      <div class="container">
+        <article class="card center">
+          <h2 class="title">Counting Days</h2>
+          <div class="countdown" id="countdownGrid">
+            <div class="box"><span class="num" id="days">00</span><small>Days</small></div>
+            <div class="box"><span class="num" id="hours">00</span><small>Hours</small></div>
+            <div class="box"><span class="num" id="minutes">00</span><small>Minutes</small></div>
+            <div class="box"><span class="num" id="seconds">00</span><small>Seconds</small></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="details" class="section reveal">
+      <div class="container">
+        <article class="card center">
+          <h2 class="title">Butiran Majlis</h2>
+          <p><strong>Tarikh:</strong> 29 Ogos 2026</p>
+          <p><strong>Masa:</strong> 11:00 AM - 4:00 PM</p>
+          <p><strong>Lokasi:</strong> Dewan Serbaguna Bedong, Kedah</p>
+          <div class="btn-row">
+            <a class="btn" href="https://maps.google.com" target="_blank" rel="noopener">Location</a>
+            <button class="btn" id="calendarBtn" type="button">Calendar</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="aturcara" class="section reveal">
+      <div class="container">
+        <article class="card">
+          <h2 class="title">Aturcara</h2>
+          <ol class="timeline">
+            <li>11:00 AM - Majlis Bermula</li>
+            <li>12:00 PM - Ketibaan Pengantin</li>
+            <li>4:00 PM - Majlis Bersurai</li>
+          </ol>
+        </article>
+      </div>
+    </section>
+
+    <section id="galeri" class="section reveal">
+      <div class="container">
+        <article class="card">
+          <h2 class="title">Galeri</h2>
+          <div class="gallery">
+            <img src="images/foto1.jpg" alt="Photo 1" data-lightbox>
+            <img src="images/foto2.jpg" alt="Photo 2" data-lightbox>
+            <img src="images/foto3.jpg" alt="Photo 3" data-lightbox>
+            <img src="images/foto4.jpg" alt="Photo 4" data-lightbox>
+            <img src="images/foto5.jpg" alt="Photo 5" data-lightbox>
+            <img src="images/foto6.jpg" alt="Photo 6" data-lightbox>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact" class="section reveal">
+      <div class="container">
+        <article class="card center">
+          <h2 class="title">Contact & RSVP</h2>
+          <p class="sub">Confirm kehadiran melalui WhatsApp.</p>
+          <div class="btn-row">
+            <a class="btn" href="https://wa.me/601XXXXXXXX?text=Assalamualaikum%2C%20saya%20nak%20confirm%20hadir%20majlis%20ya." target="_blank" rel="noopener">Contact Amir</a>
+            <a class="btn" href="https://wa.me/601XXXXXXXX?text=Assalamualaikum%2C%20saya%20nak%20confirm%20hadir%20majlis%20ya." target="_blank" rel="noopener">Contact Lidya</a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <button class="music-fab" id="musicFab" aria-label="Toggle music" title="Play / Pause">
+    <span class="ring" aria-hidden="true"></span>
+    <span aria-hidden="true">♪</span>
+  </button>
+  <div id="ytPlayer"></div>
+
+  <nav class="bottom-nav">
+    <a href="#contact">Contact</a>
+    <button type="button" id="musicNavBtn">Music</button>
+    <a href="#details">Location</a>
+    <button type="button" id="calendarNavBtn">Calendar</button>
+  </nav>
+
+  <dialog id="lightbox">
+    <img id="lightboxImage" alt="Preview">
+    <div style="display:flex;justify-content:flex-end;margin-top:.5rem;">
+      <button class="btn" id="closeLightbox" type="button">Tutup</button>
+    </div>
+  </dialog>
+
+  <dialog id="calendarDialog">
+    <h3 style="margin:.2rem 0 .5rem;">Save the Date</h3>
+    <p class="sub">29 Ogos 2026, 11:00 AM - 4:00 PM</p>
+    <p class="sub">Dewan Serbaguna Bedong, Kedah</p>
+    <div style="display:flex;justify-content:flex-end;margin-top:.5rem;">
+      <button class="btn" id="closeCalendar" type="button">Tutup</button>
+    </div>
+  </dialog>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    const cover = document.getElementById("cover");
+    const coverCard = document.getElementById("coverCard");
+    document.body.style.overflow = "hidden";
+    document.getElementById("openInvite").addEventListener("click", () => {
+      coverCard.classList.add("tap-pop");
+      setTimeout(() => {
+        cover.classList.add("hidden");
+        document.body.style.overflow = "auto";
+        markInteraction();
+      }, 240);
+    });
+
+    const targetDate = new Date("2026-08-29T11:00:00+08:00");
+    const countdownGrid = document.getElementById("countdownGrid");
+    function tickCountdown() {
+      const diff = targetDate.getTime() - Date.now();
+      if (!Number.isFinite(diff) || diff <= 0) {
+        countdownGrid.innerHTML = "<p style='grid-column:1/-1;margin:.2rem 0;'>Majlis sedang berlangsung.</p>";
+        return;
+      }
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const minutes = Math.floor((diff % 3600000) / 60000);
+      const seconds = Math.floor((diff % 60000) / 1000);
+      document.getElementById("days").textContent = String(days).padStart(2, "0");
+      document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+      document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+      document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+    }
+    tickCountdown();
+    setInterval(tickCountdown, 1000);
+
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.14 });
+    document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightboxImage");
+    document.querySelectorAll("[data-lightbox]").forEach((img) => {
+      img.addEventListener("click", () => {
+        lightboxImage.src = img.src;
+        lightboxImage.alt = img.alt;
+        lightbox.showModal();
+      });
+    });
+    document.getElementById("closeLightbox").addEventListener("click", () => lightbox.close());
+
+    const calendarDialog = document.getElementById("calendarDialog");
+    const openCalendar = () => calendarDialog.showModal();
+    document.getElementById("calendarBtn").addEventListener("click", openCalendar);
+    document.getElementById("calendarNavBtn").addEventListener("click", openCalendar);
+    document.getElementById("closeCalendar").addEventListener("click", () => calendarDialog.close());
+
+    let player;
+    let playerReady = false;
+    let interacted = false;
+    const musicFab = document.getElementById("musicFab");
+    const musicNavBtn = document.getElementById("musicNavBtn");
+    function setMusicState(isPlaying) {
+      musicFab.classList.toggle("is-playing", isPlaying);
+    }
+    function tryPlay(unmute) {
+      if (!playerReady || !player) return;
+      try {
+        if (unmute) player.unMute();
+        player.playVideo();
+      } catch (_) {}
+    }
+    function toggleMusic() {
+      if (!playerReady || !player || typeof YT === "undefined") return;
+      const state = player.getPlayerState();
+      if (state === YT.PlayerState.PLAYING) player.pauseVideo();
+      else tryPlay(true);
+    }
+    function markInteraction() {
+      if (interacted) return;
+      interacted = true;
+      tryPlay(true);
+    }
+    [musicFab, musicNavBtn].forEach((el) => el.addEventListener("click", toggleMusic));
+    ["click", "touchstart", "scroll", "keydown"].forEach((evt) => {
+      window.addEventListener(evt, markInteraction, { once: true, passive: true });
+    });
+
+    window.onYouTubeIframeAPIReady = function () {
+      player = new YT.Player("ytPlayer", {
+        videoId: "3k6yn8Yc8CA",
+        playerVars: { autoplay: 1, controls: 0, rel: 0, playsinline: 1, modestbranding: 1 },
+        events: {
+          onReady: function () {
+            playerReady = true;
+            try {
+              player.mute();
+              player.playVideo();
+            } catch (_) {}
+          },
+          onStateChange: function (event) {
+            if (typeof YT === "undefined") return;
+            setMusicState(event.data === YT.PlayerState.PLAYING);
+          }
+        }
+      });
+    };
+  </script>
+</body>
+</html>
+<!doctype html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kad Kahwin Digital | Amir & Lidya</title>
+  <meta name="description" content="Kad jemputan digital Amir dan Lidya">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
       --slate: #7a9aa8;
       --slate-dark: #5a7a88;
       --card-bg: rgba(255, 255, 255, 0.9);
