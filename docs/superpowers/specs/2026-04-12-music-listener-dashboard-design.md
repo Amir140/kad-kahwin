@@ -44,11 +44,13 @@ Single dev server, shared **design tokens** (CSS variables) and primitives, and 
 
 ### 3.1 Shell layout
 
-| Region | Responsibility |
-|--------|----------------|
-| Left nav rail | Home, Search, Library, “Create playlist” CTA (non-persisted or stub). |
-| Main column | Vertically stacked **carousel sections**; main scroll. |
+
+| Region             | Responsibility                                                                                          |
+| ------------------ | ------------------------------------------------------------------------------------------------------- |
+| Left nav rail      | Home, Search, Library, “Create playlist” CTA (non-persisted or stub).                                   |
+| Main column        | Vertically stacked **carousel sections**; main scroll.                                                  |
 | Bottom mini player | Artwork, title/artist, like, play/pause, skip, scrubber, volume, queue/device entry (stubs acceptable). |
+
 
 ### 3.2 Responsive behavior
 
@@ -67,12 +69,14 @@ Each section: title row with optional **“See all”** (stub navigation or disa
 
 ## 4. Components (conceptual)
 
-| Component | Notes |
-|-----------|--------|
-| `AppShell` | Composes nav + main + player; enforces min-height and overflow on main. |
-| `CarouselSection` | Title, optional subtitle, “See all”, horizontally scrolling track list; keyboard focusable. |
-| `TrackCard` / `PlaylistCard` | Consistent aspect ratio, hover/focus, skeleton loading state for simulated fetch. |
-| `MiniPlayer` | Fixed height docked to bottom; does not obscure primary CTAs; `aria-label` on icon-only controls. |
+
+| Component                    | Notes                                                                                             |
+| ---------------------------- | ------------------------------------------------------------------------------------------------- |
+| `AppShell`                   | Composes nav + main + player; enforces min-height and overflow on main.                           |
+| `CarouselSection`            | Title, optional subtitle, “See all”, horizontally scrolling track list; keyboard focusable.       |
+| `TrackCard` / `PlaylistCard` | Consistent aspect ratio, hover/focus, skeleton loading state for simulated fetch.                 |
+| `MiniPlayer`                 | Fixed height docked to bottom; does not obscure primary CTAs; `aria-label` on icon-only controls. |
+
 
 ## 5. Data and state
 
