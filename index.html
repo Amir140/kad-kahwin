@@ -12,6 +12,488 @@
     :root {
       --slate: #7a9aa8;
       --slate-dark: #5a7a88;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --line: rgba(90, 122, 136, 0.25);
+      --text: #31424b;
+      --muted: #586a73;
+      --shadow: 0 14px 30px rgba(22, 38, 45, 0.14);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Jost", sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, var(--slate-dark), var(--slate));
+      min-height: 100vh;
+    }
+    .floral-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 0 0, rgba(255,255,255,0.18) 0 14%, transparent 30%),
+        radial-gradient(circle at 100% 100%, rgba(255,255,255,0.16) 0 14%, transparent 30%);
+      opacity: 0.8;
+      z-index: 0;
+    }
+    .container { width: min(100% - 1.4rem, 760px); margin: 0 auto; position: relative; z-index: 2; }
+    .section { padding: 1rem 0; }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 1.15rem;
+      backdrop-filter: blur(6px);
+    }
+    .center { text-align: center; }
+    .kicker { margin: 0; letter-spacing: .16em; text-transform: uppercase; font-size: .72rem; color: var(--muted); }
+    .script {
+      margin: .35rem 0;
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(2.4rem, 10vw, 4.2rem);
+      font-weight: 400;
+      color: #3f5a67;
+    }
+    .date-dot {
+      margin: .3rem 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.3rem;
+      letter-spacing: .2em;
+      color: #3f5763;
+    }
+    .sub { margin: .22rem 0; color: var(--muted); }
+    .title {
+      margin: 0 0 .7rem;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.5rem;
+      color: #425966;
+    }
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: .55rem;
+      text-align: center;
+    }
+    .countdown .box {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,.65);
+      padding: .62rem .2rem;
+    }
+    .countdown .num { display: block; font-size: 1.3rem; font-weight: 600; color: #3a5360; }
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      padding: .62rem 1.1rem;
+      color: #fff;
+      font: inherit;
+      background: linear-gradient(135deg, #4e6b79, #688896);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform .22s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-row { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .timeline { margin: 0; padding-left: 1rem; }
+    .timeline li { margin: .42rem 0; }
+    .gallery { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .5rem; }
+    .gallery img {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.6);
+      cursor: pointer;
+    }
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: .65rem;
+      width: min(100% - 1rem, 540px);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .35rem;
+      padding: .35rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,.9);
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 24px rgba(0,0,0,.13);
+      z-index: 30;
+    }
+    .bottom-nav a, .bottom-nav button {
+      border: 0;
+      background: transparent;
+      font: inherit;
+      color: #3d5764;
+      border-radius: 999px;
+      padding: .45rem .2rem;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .bottom-nav a:hover, .bottom-nav button:hover { background: rgba(122,154,168,.2); }
+    .music-fab {
+      position: fixed;
+      right: .9rem;
+      bottom: 5.25rem;
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.95);
+      color: #37505d;
+      box-shadow: 0 8px 20px rgba(0,0,0,.15);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      z-index: 40;
+    }
+    .music-fab .ring {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #9caab1;
+    }
+    .music-fab.is-playing .ring { background: #45b878; animation: pulse 1.8s ease infinite; }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(69,184,120,.48); }
+      70% { box-shadow: 0 0 0 8px rgba(69,184,120,0); }
+      100% { box-shadow: 0 0 0 0 rgba(69,184,120,0); }
+    }
+
+    /* Reference-like opening cover */
+    .cover {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, rgba(90,122,136,.9), rgba(122,154,168,.92));
+      transition: opacity .8s ease, visibility .8s ease;
+    }
+    .cover.hidden { opacity: 0; visibility: hidden; }
+    .cover-card {
+      width: min(92vw, 420px);
+      text-align: center;
+      background: rgba(255,255,255,.9);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 1.2rem;
+      box-shadow: var(--shadow);
+      animation: coverRise .9s ease both;
+    }
+    @keyframes coverRise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    dialog { border: 0; border-radius: 14px; width: min(92vw, 420px); padding: .7rem; }
+    dialog img { width: 100%; border-radius: 10px; }
+    dialog::backdrop { background: rgba(14,24,30,.56); }
+
+    #ytPlayer { position: absolute; left: -9999px; width: 1px; height: 1px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 1ms !important; transition-duration: 1ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="floral-bg"></div>
+
+  <div class="cover" id="cover">
+    <article class="cover-card">
+      <p class="kicker">You are invited</p>
+      <h1 class="script">Amir &amp; Lidya</h1>
+      <p class="date-dot">29 . 08 . 2026</p>
+      <p class="sub">Dewan Serbaguna Bedong, Kedah</p>
+      <button class="btn" id="openInvite">Open</button>
+    </article>
+  </div>
+
+  <main id="mainContent">
+    <section id="hero" class="section reveal">
+      <div class="container">
+        <article class="card center">
+          <p class="kicker">Walimatul Urus</p>
+          <p class="sub">Dengan penuh kesyukuran kami menjemput</p>
+          <h1 class="script">Amir &amp; Lidya</h1>
+          <p class="date-dot">29 . 08 . 2026</p>
+          <p class="sub">11:00 Pagi - 4:00 Petang</p>
+          <p class="sub">Dewan Serbaguna Bedong, Kedah</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="countdown" class="section reveal">
+      <div class="container">
+        <article class="card center">
+          <h2 class="title">COUNTING DAYS</h2>
+          <div class="countdown" id="countdownGrid">
+            <div class="box"><span id="days" class="num">00</span><small>Days</small></div>
+            <div class="box"><span id="hours" class="num">00</span><small>Hours</small></div>
+            <div class="box"><span id="minutes" class="num">00</span><small>Minutes</small></div>
+            <div class="box"><span id="seconds" class="num">00</span><small>Seconds</small></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="jemputan" class="section reveal">
+      <div class="container">
+        <article class="card center">
+          <h2 class="title">Jemputan</h2>
+          <p class="sub">Dengan segala hormatnya kami menjemput Tuan/Puan/Encik/Cik</p>
+          <p><strong>[Nama Ibu Bapa Amir]</strong><br><small>(Pihak Pengantin Lelaki)</small></p>
+          <p class="sub">bersama</p>
+          <p><strong>[Nama Ibu Bapa Lidya]</strong><br><small>(Pihak Pengantin Perempuan)</small></p>
+        </article>
+      </div>
+    </section>
+
+    <section id="details" class="section reveal">
+      <div class="container">
+        <article class="card center">
+          <h2 class="title">Wedding Celebration</h2>
+          <p><strong>Date:</strong> 29 . 08 . 2026</p>
+          <p><strong>Time:</strong> 11:00 AM - 4:00 PM</p>
+          <p><strong>Venue:</strong> Dewan Serbaguna Bedong, Kedah</p>
+          <div class="btn-row" style="justify-content:center;">
+            <a class="btn" href="https://maps.google.com" target="_blank" rel="noopener">Location</a>
+            <button class="btn" id="calendarBtn" type="button">Save the Date</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="aturcara" class="section reveal">
+      <div class="container">
+        <article class="card">
+          <h2 class="title">Aturcara Majlis</h2>
+          <ol class="timeline">
+            <li>11:00 AM - Majlis Bermula</li>
+            <li>12:00 PM - Ketibaan Pengantin</li>
+            <li>4:00 PM - Majlis Bersurai</li>
+          </ol>
+        </article>
+      </div>
+    </section>
+
+    <section id="galeri" class="section reveal">
+      <div class="container">
+        <article class="card">
+          <h2 class="title">Photos</h2>
+          <div class="gallery">
+            <img src="images/foto1.jpg" alt="Photo 1" data-lightbox>
+            <img src="images/foto2.jpg" alt="Photo 2" data-lightbox>
+            <img src="images/foto3.jpg" alt="Photo 3" data-lightbox>
+            <img src="images/foto4.jpg" alt="Photo 4" data-lightbox>
+            <img src="images/foto5.jpg" alt="Photo 5" data-lightbox>
+            <img src="images/foto6.jpg" alt="Photo 6" data-lightbox>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="gift" class="section reveal">
+      <div class="container">
+        <article class="card">
+          <h2 class="title">Salam Kauk</h2>
+          <p class="sub">Boleh scan QR atau guna akaun di bawah.</p>
+          <img src="images/qr.jpg" alt="QR Salam Kauk" style="max-width:220px;width:100%;border-radius:10px;border:1px solid var(--line);">
+          <p><strong>No. Akaun:</strong> [No Akaun Placeholder]</p>
+          <p><strong>Nama Penerima:</strong> [Nama Penerima Placeholder]</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="rsvp" class="section reveal">
+      <div class="container">
+        <article class="card center">
+          <h2 class="title">RSVP</h2>
+          <p class="sub">Confirm kehadiran melalui WhatsApp.</p>
+          <div class="btn-row" style="justify-content:center;">
+            <a class="btn" href="https://wa.me/601XXXXXXXX?text=Assalamualaikum%2C%20saya%20nak%20confirm%20hadir%20majlis%20ya." target="_blank" rel="noopener">RSVP Amir</a>
+            <a class="btn" href="https://wa.me/601XXXXXXXX?text=Assalamualaikum%2C%20saya%20nak%20confirm%20hadir%20majlis%20ya." target="_blank" rel="noopener">RSVP Lidya</a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <button class="music-fab" id="musicFab" aria-label="Toggle music" title="Play / Pause">
+    <span class="ring" aria-hidden="true"></span>
+    <span aria-hidden="true">♪</span>
+  </button>
+  <div id="ytPlayer"></div>
+
+  <nav class="bottom-nav">
+    <a href="#rsvp">Contact</a>
+    <button type="button" id="musicNavBtn">Music</button>
+    <a href="#details">Location</a>
+    <button type="button" id="calendarNavBtn">Calendar</button>
+  </nav>
+
+  <dialog id="lightbox">
+    <img id="lightboxImage" alt="Preview">
+    <div style="display:flex;justify-content:flex-end;margin-top:.5rem;">
+      <button class="btn" id="closeLightbox" type="button">Tutup</button>
+    </div>
+  </dialog>
+
+  <dialog id="calendarDialog">
+    <h3 style="margin:.2rem 0 .5rem;">Save the Date</h3>
+    <p class="sub">29 Ogos 2026, 11:00 AM - 4:00 PM</p>
+    <p class="sub">Dewan Serbaguna Bedong, Kedah</p>
+    <div style="display:flex;justify-content:flex-end;margin-top:.5rem;">
+      <button class="btn" id="closeCalendar" type="button">Tutup</button>
+    </div>
+  </dialog>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    const cover = document.getElementById("cover");
+    document.getElementById("openInvite").addEventListener("click", () => {
+      cover.classList.add("hidden");
+      document.body.style.overflow = "auto";
+      markInteraction();
+    });
+    document.body.style.overflow = "hidden";
+
+    const targetDate = new Date("2026-08-29T11:00:00+08:00");
+    const countdownGrid = document.getElementById("countdownGrid");
+    function tickCountdown() {
+      const diff = targetDate.getTime() - Date.now();
+      if (!Number.isFinite(diff) || diff <= 0) {
+        countdownGrid.innerHTML = "<p style='grid-column:1/-1;margin:.2rem 0;'>Majlis sedang berlangsung.</p>";
+        return;
+      }
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const minutes = Math.floor((diff % 3600000) / 60000);
+      const seconds = Math.floor((diff % 60000) / 1000);
+      document.getElementById("days").textContent = String(days).padStart(2, "0");
+      document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+      document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+      document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+    }
+    tickCountdown();
+    setInterval(tickCountdown, 1000);
+
+    const revealTargets = document.querySelectorAll(".reveal");
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.14 });
+    revealTargets.forEach((el) => revealObserver.observe(el));
+
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightboxImage");
+    document.querySelectorAll("[data-lightbox]").forEach((img) => {
+      img.addEventListener("click", () => {
+        lightboxImage.src = img.src;
+        lightboxImage.alt = img.alt;
+        lightbox.showModal();
+      });
+    });
+    document.getElementById("closeLightbox").addEventListener("click", () => lightbox.close());
+
+    const calendarDialog = document.getElementById("calendarDialog");
+    function openCalendar() { calendarDialog.showModal(); }
+    document.getElementById("calendarBtn").addEventListener("click", openCalendar);
+    document.getElementById("calendarNavBtn").addEventListener("click", openCalendar);
+    document.getElementById("closeCalendar").addEventListener("click", () => calendarDialog.close());
+
+    let player;
+    let playerReady = false;
+    let interacted = false;
+    const musicFab = document.getElementById("musicFab");
+    const musicNavBtn = document.getElementById("musicNavBtn");
+
+    function setMusicState(isPlaying) {
+      musicFab.classList.toggle("is-playing", isPlaying);
+      musicFab.setAttribute("aria-label", isPlaying ? "Pause music" : "Play music");
+    }
+    function tryPlay(unmute) {
+      if (!playerReady || !player) return;
+      try {
+        if (unmute) player.unMute();
+        player.playVideo();
+      } catch (_) {}
+    }
+    function toggleMusic() {
+      if (!playerReady || !player || typeof YT === "undefined") return;
+      const state = player.getPlayerState();
+      if (state === YT.PlayerState.PLAYING) player.pauseVideo();
+      else tryPlay(true);
+    }
+    function markInteraction() {
+      if (interacted) return;
+      interacted = true;
+      tryPlay(true);
+    }
+    [musicFab, musicNavBtn].forEach((el) => el.addEventListener("click", toggleMusic));
+    ["click", "touchstart", "scroll", "keydown"].forEach((evt) => {
+      window.addEventListener(evt, markInteraction, { once: true, passive: true });
+    });
+
+    window.onYouTubeIframeAPIReady = function () {
+      player = new YT.Player("ytPlayer", {
+        videoId: "3k6yn8Yc8CA",
+        playerVars: { autoplay: 1, controls: 0, rel: 0, playsinline: 1, modestbranding: 1 },
+        events: {
+          onReady: function () {
+            playerReady = true;
+            try {
+              player.mute();
+              player.playVideo();
+            } catch (_) {}
+          },
+          onStateChange: function (event) {
+            if (typeof YT === "undefined") return;
+            setMusicState(event.data === YT.PlayerState.PLAYING);
+          }
+        }
+      });
+    };
+  </script>
+</body>
+</html>
+<!doctype html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kad Kahwin Digital | Amir & Lidya</title>
+  <meta name="description" content="Kad jemputan digital Amir dan Lidya">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --slate: #7a9aa8;
+      --slate-dark: #5a7a88;
       --card-bg: rgba(255, 255, 255, 0.88);
       --text: #2f3a40;
       --muted: #5f6d74;
