@@ -11,13 +11,13 @@
   <style>
     :root {
       --bg: #f9f7f2;
-      --slate: #7a9aa8;
-      --slate-dark: #5a7a88;
-      --card: rgba(255, 255, 255, 0.88);
+      --slate: #8f9ea2;
+      --slate-dark: #5f6f75;
+      --card: rgba(255, 255, 255, 0.9);
       --text: #2f3a40;
-      --muted: #5f6d74;
-      --line: rgba(90, 122, 136, 0.22);
-      --shadow: 0 12px 32px rgba(31, 51, 60, 0.1);
+      --muted: #6a757b;
+      --line: rgba(125, 135, 140, 0.25);
+      --shadow: 0 10px 24px rgba(33, 40, 44, 0.08);
     }
 
     * { box-sizing: border-box; }
@@ -36,9 +36,9 @@
       inset: 0;
       z-index: -1;
       background:
-        radial-gradient(circle at 15% 10%, rgba(122, 154, 168, 0.18), transparent 32%),
-        radial-gradient(circle at 85% 90%, rgba(90, 122, 136, 0.18), transparent 35%),
-        linear-gradient(160deg, rgba(122, 154, 168, 0.16), rgba(255, 255, 255, 0.65));
+        radial-gradient(circle at 15% 10%, rgba(210, 204, 192, 0.35), transparent 32%),
+        radial-gradient(circle at 85% 90%, rgba(173, 184, 188, 0.22), transparent 35%),
+        linear-gradient(160deg, #f5f2ea, #fdfcf9 60%, #ece9e1);
     }
 
     .container { width: min(100% - 1.2rem, 840px); margin: 0 auto; }
@@ -65,8 +65,9 @@
       font-family: "Great Vibes", cursive;
       font-size: clamp(2.2rem, 8vw, 4.2rem);
       line-height: 1;
-      color: #20313a;
+      color: #2a3439;
       font-weight: 400;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
     }
     .subheading {
       margin: .3rem 0;
@@ -103,9 +104,9 @@
       display: grid;
       place-items: center;
       background:
-        radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.35), transparent 28%),
-        radial-gradient(circle at 90% 85%, rgba(255, 255, 255, 0.28), transparent 30%),
-        linear-gradient(180deg, var(--slate), #93afbc);
+        radial-gradient(circle at 8% 8%, rgba(217, 208, 192, 0.5), transparent 26%),
+        radial-gradient(circle at 92% 88%, rgba(196, 205, 208, 0.45), transparent 28%),
+        linear-gradient(180deg, #ece8df, #f8f5ef);
       transition: transform .8s cubic-bezier(.76, 0, .24, 1), opacity .8s ease;
     }
     .cover.hide {
@@ -117,10 +118,30 @@
       width: min(86vw, 340px);
       background: var(--card);
       border: 1px solid var(--line);
-      border-radius: 22px;
+      border-radius: 10px;
       box-shadow: var(--shadow);
       padding: 1.2rem 1rem;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover-card::before,
+    .cover-card::after {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border: 1px solid rgba(143, 158, 162, 0.28);
+      border-radius: 999px;
+      pointer-events: none;
+    }
+    .cover-card::before {
+      top: -66px;
+      left: -54px;
+    }
+    .cover-card::after {
+      bottom: -72px;
+      right: -58px;
     }
 
     .reveal {
@@ -316,11 +337,11 @@
 <body>
   <div class="app-bg"></div>
 
-  <section class="cover" id="cover">
+    <section class="cover" id="cover">
     <article class="cover-card">
-      <p class="subheading">Walimatul Urus</p>
+        <p class="subheading">بِسْمِ ٱللَّٰهِ</p>
       <h1 class="name">Amir &amp; Lidya</h1>
-      <p class="subheading">29 . 08 . 2026</p>
+        <p class="caption">29 . 08 . 2026</p>
       <button class="btn" id="openInvite" type="button">Buka Jemputan</button>
     </article>
   </section>
@@ -329,7 +350,7 @@
     <section id="hero" class="section reveal">
       <div class="container">
         <article class="card center">
-          <p class="subheading">Bismillahirrahmanirrahim</p>
+          <p class="subheading">بِسْمِ ٱللَّٰهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
           <h1 class="name">Amir &amp; Lidya</h1>
           <p class="subheading">29 Ogos 2026 (Sabtu)</p>
           <p class="muted">11:00 Pagi - 4:00 Petang</p>
