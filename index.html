@@ -45,35 +45,46 @@
     .overlay-backdrop {
       position: fixed;
       inset: 0;
-      background: var(--charcoal);
+      background: #050505;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 50;
       padding: 24px;
+      opacity: 1;
+      transition: opacity 0.45s ease;
+    }
+
+    .overlay-backdrop.closing {
+      opacity: 0;
+      pointer-events: none;
     }
 
     .overlay-card {
-      width: min(360px, 90vw);
+      width: min(420px, 92vw);
       background: var(--white);
       border: 1px solid rgba(212, 175, 55, 0.22);
-      border-radius: 28px;
-      padding: 32px 28px 30px;
-      box-shadow: 0 32px 80px rgba(22, 22, 22, 0.28);
+      border-radius: 30px;
+      padding: 36px 32px 34px;
+      box-shadow: 0 44px 120px rgba(0, 0, 0, 0.32);
       position: relative;
       text-align: center;
       cursor: pointer;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(18px) scale(0.98);
+      animation: overlayIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
 
     .overlay-card::before,
     .overlay-card::after {
       content: '';
       position: absolute;
-      width: 30px;
-      height: 30px;
+      width: 38px;
+      height: 38px;
       border: 1px solid var(--gold);
       border-radius: 50%;
-      opacity: 0.35;
+      opacity: 0.24;
     }
 
     .overlay-card::before {
@@ -88,50 +99,60 @@
 
     .overlay-bismillah {
       font-family: 'Amiri', serif;
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       color: var(--ink);
       letter-spacing: 0.04em;
       line-height: 1.05;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
       display: inline-block;
     }
 
     .overlay-divider {
-      width: 70px;
+      width: 80px;
       height: 1px;
-      margin: 0 auto 18px;
+      margin: 0 auto 16px;
       background: linear-gradient(90deg, transparent, var(--gold), transparent);
     }
 
     .overlay-title {
       font-family: 'Playfair Display', serif;
-      font-size: 0.9rem;
-      letter-spacing: 0.22em;
+      font-size: 0.95rem;
+      letter-spacing: 0.26em;
       text-transform: uppercase;
       color: var(--ink-soft);
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .overlay-monogram {
       font-family: 'Playfair Display', serif;
       color: var(--gold);
-      font-size: 3.25rem;
-      letter-spacing: 0.12em;
-      margin-bottom: 18px;
+      font-size: 3.5rem;
+      letter-spacing: 0.14em;
+      margin-bottom: 14px;
     }
 
     .overlay-subtitle {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       font-weight: 300;
       line-height: 1.3;
       color: var(--ink);
-      margin-bottom: 22px;
+      margin-bottom: 18px;
+    }
+
+    .overlay-detail {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+      letter-spacing: 0.12em;
+      line-height: 1.8;
+      margin-bottom: 24px;
     }
 
     .overlay-action {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 10px;
       padding: 12px 26px;
       border: 1px solid var(--gold);
@@ -147,12 +168,14 @@
     .page {
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.5s ease 0.1s;
+      transform: translateY(26px);
+      transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
     }
 
     .page.visible {
       opacity: 1;
       visibility: visible;
+      transform: translateY(0);
     }
 
     .invite-shell {
@@ -223,61 +246,38 @@
       margin: 0 auto;
     }
 
-    .hero-bismillah {
-      font-family: 'Amiri', serif;
-      font-size: clamp(1.4rem, 4vw, 1.9rem);
-      color: var(--ink);
-      opacity: 0;
-      transform: translateY(18px);
-      animation: appearUp 0.8s ease forwards;
-      animation-delay: 0.3s;
-    }
-
-    .hero-stance {
-      font-family: 'Playfair Display', serif;
-      font-size: 0.85rem;
-      color: var(--ink-soft);
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      opacity: 0;
-      transform: translateY(18px);
-      animation: appearUp 0.8s ease forwards;
-      animation-delay: 0.55s;
-    }
-
-    .hero-names {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(3rem, 8vw, 4.8rem);
-      letter-spacing: 0.08em;
-      line-height: 0.92;
-      color: var(--ink);
-      margin: 0;
-      opacity: 0;
-      transform: translateY(18px);
-      animation: appearUp 0.8s ease forwards;
-      animation-delay: 0.8s;
-    }
-
-    .hero-detail {
-      font-family: 'Cormorant Garamond', serif;
-      color: var(--ink-soft);
-      font-size: 1rem;
-      line-height: 1.9;
-      margin: 0;
-      opacity: 0;
-      transform: translateY(18px);
-      animation: appearUp 0.8s ease forwards;
-      animation-delay: 1.05s;
-    }
-
+    .hero-bismillah,
+    .hero-stance,
+    .hero-names,
+    .hero-detail,
     .hero-lily {
-      width: 100%;
-      max-width: 320px;
-      margin: 0 auto 26px;
       opacity: 0;
-      transform: translateY(14px);
-      animation: appearUp 0.8s ease forwards;
+      transform: translateY(18px);
+    }
+
+    .page.visible .hero-bismillah {
+      animation: appearUp 0.75s ease forwards;
+      animation-delay: 0.25s;
+    }
+
+    .page.visible .hero-stance {
+      animation: appearUp 0.75s ease forwards;
+      animation-delay: 0.5s;
+    }
+
+    .page.visible .hero-names {
+      animation: appearUp 0.75s ease forwards;
+      animation-delay: 0.75s;
+    }
+
+    .page.visible .hero-lily {
+      animation: appearUp 0.75s ease forwards;
       animation-delay: 0.95s;
+    }
+
+    .page.visible .hero-detail {
+      animation: appearUp 0.75s ease forwards;
+      animation-delay: 1.05s;
     }
 
     .hero-lily svg {
@@ -326,6 +326,11 @@
     @keyframes appearUp {
       from { opacity: 0; transform: translateY(18px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes overlayIn {
+      from { opacity: 0; transform: translateY(18px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     @keyframes float {
@@ -380,10 +385,11 @@
     <div class="overlay-card" tabindex="0">
       <div class="overlay-bismillah" lang="ar" aria-label="Bismillahirrahmanirrahim">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
       <div class="overlay-divider"></div>
-      <div class="overlay-title">The families of</div>
+      <div class="overlay-title">Walimatul Urus</div>
       <div class="overlay-monogram">A & L</div>
-      <div class="overlay-subtitle">invite you to their wedding celebration</div>
-      <div class="overlay-action">Tap to open</div>
+      <div class="overlay-subtitle">Amir & Lydia</div>
+      <div class="overlay-detail">Saturday, 29 August 2026<br />Dewan Serbaguna Bedong, Kedah</div>
+      <div class="overlay-action">Tap anywhere to enter</div>
     </div>
   </div>
 
@@ -437,8 +443,7 @@
     const card = overlay.querySelector('.overlay-card');
 
     function openInvitation() {
-      overlay.style.opacity = '0';
-      overlay.style.transition = 'opacity 0.45s ease';
+      overlay.classList.add('closing');
       setTimeout(() => {
         overlay.style.display = 'none';
         page.classList.add('visible');
